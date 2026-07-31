@@ -1,4 +1,5 @@
 import pytest
+from decimal import Decimal
 from unittest.mock import MagicMock, AsyncMock, patch
 
 
@@ -18,7 +19,7 @@ async def test_calculate_total_revenue_never_hits_mock_fallback():
     from app.core.database_pool import db_pool
 
     mock_row = MagicMock()
-    mock_row.total_revenue = "2250.000"
+    mock_row.total_revenue = Decimal("2250.000")
     mock_row.reservation_count = 4
 
     mock_result = MagicMock()
@@ -43,7 +44,7 @@ async def test_calculate_total_revenue_never_hits_mock_fallback():
 
         errors = [c for c in print_calls if "Database error" in c]
         assert not errors, f"Encountered database error: {errors[0]}"
-        assert result["total"] == "2250.000"
+        assert result["total"] == "2250.00"
         assert result["count"] == 4
     finally:
         db_pool.session_factory = None
